@@ -71,10 +71,10 @@ namespace gazebo
 
         node = transport::NodePtr(new transport::Node());
         node->Init(raySensor->WorldName());
-        // PointCloud2 publisher
-        cloud2_pub = node_->create_publisher<sensor_msgs::msg::PointCloud2>(curr_scan_topic + "_PointCloud2", 10);
-        // CustomMsg publisher
-        custom_pub = node_->create_publisher<livox_ros_driver2::msg::CustomMsg>(curr_scan_topic, 10);
+        // PointCloud2 publisher - publish directly to topic name without suffix
+        cloud2_pub = node_->create_publisher<sensor_msgs::msg::PointCloud2>(curr_scan_topic, 10);
+        // CustomMsg publisher - disabled to avoid duplicate topics
+        // custom_pub = node_->create_publisher<livox_ros_driver2::msg::CustomMsg>(curr_scan_topic, 10);
 
         scanPub = node->Advertise<msgs::LaserScanStamped>(curr_scan_topic+"laserscan", 50);
 
@@ -207,7 +207,7 @@ namespace gazebo
 
         // Set the number of point cloud data and publish the CustomMsg message
         pp_livox.point_num = count;
-        custom_pub->publish(pp_livox);
+        // custom_pub->publish(pp_livox);  // Disabled - only publish PointCloud2
 
         // Publish PointCloud2 type message
         sensor_msgs::msg::PointCloud2 cloud2;
